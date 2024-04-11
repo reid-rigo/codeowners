@@ -1,9 +1,9 @@
-defmodule CodeownersEx.MixProject do
+defmodule Codeowners.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :codeowners_ex,
+      app: :codeowners,
       version: "0.1.0",
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,

@@ -1,13 +1,13 @@
-defmodule CodeownersEx do
+defmodule Codeowners do
   @moduledoc """
-  Documentation for `CodeownersEx`.
+  Documentation for `Codeowners`.
   """
 
   defstruct path: nil, rules: []
 
   defmodule Rule do
     @moduledoc """
-    Documentation for `CodeownersEx.Rule`.
+    Documentation for `Codeowners.Rule`.
     """
 
     defstruct pattern: nil, regex: nil, owners: []
@@ -19,27 +19,23 @@ defmodule CodeownersEx do
 
   @doc """
   Hello world.
-
-  ## Examples
-
-      iex> CodeownersEx.load(path)
-      :world
-
   """
   def load(path) do
-    File.read!(path) |> build(path)
+    File.read!(path)
+    |> Codeowners.build()
+    |> Map.put(:path, path)
   end
 
-  def build(contents \\ "", path \\ nil) do
+  def build(contents \\ "") do
     rules =
       contents
       |> String.split("\n", trim: true)
       |> Enum.reject(fn line -> String.starts_with?(line, "#") end)
       |> Enum.map(fn line ->
         [pattern | owners] = String.split(line)
-        %CodeownersEx.Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
+        %Codeowners.Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
       end)
 
-    %CodeownersEx{path: path, rules: rules}
+    %Codeowners{rules: rules}
   end
 end
