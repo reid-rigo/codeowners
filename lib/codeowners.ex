@@ -22,7 +22,7 @@ defmodule Codeowners do
   """
   def load(path) do
     File.read!(path)
-    |> Codeowners.build()
+    |> build()
     |> Map.put(:path, path)
   end
 
@@ -33,9 +33,20 @@ defmodule Codeowners do
       |> Enum.reject(fn line -> String.starts_with?(line, "#") end)
       |> Enum.map(fn line ->
         [pattern | owners] = String.split(line)
-        %Codeowners.Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
+        %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
       end)
 
     %Codeowners{rules: rules}
+  end
+
+  def codeowners_for_path(%Codeowners{} = codeowners, path) do
+    # TODO
+  end
+
+  def codeowners_for_module(%Codeowners{} = codeowners, module) do
+    module.module_info()
+    |> Keyword.get(:compile)
+    |> Keyword.get(:source)
+    |> codeowners_for_path(codeowners)
   end
 end

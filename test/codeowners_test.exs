@@ -1,6 +1,6 @@
 defmodule CodeownersTest do
   @moduledoc """
-  Documentation for `Codeowners`.
+  Test suite for `Codeowners`.
   """
 
   use ExUnit.Case
