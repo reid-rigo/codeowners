@@ -6,7 +6,16 @@ defmodule CodeownersTest do
   use ExUnit.Case
   doctest Codeowners
 
-  test "greets the world" do
-    # assert Codeowners.hello() == :world
+  describe "load" do
+    test "gives a %Codeowners{}" do
+      path = Path.expand("./test/CODEOWNERS")
+      assert %Codeowners{} = Codeowners.load(path)
+    end
+  end
+
+  describe "build" do
+    test "gives a %Codeowners{}" do
+      assert %Codeowners{} = Codeowners.build()
+    end
   end
 end
