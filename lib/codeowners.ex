@@ -13,10 +13,6 @@ defmodule Codeowners do
     defstruct pattern: nil, regex: nil, owners: []
 
     def regex(pattern) do
-      pattern = if(String.starts_with?(pattern, "/"), do: "\\A" <> pattern, else: pattern)
-      pattern = if(String.ends_with?(pattern, "/**"), do: pattern <> "\\z", else: pattern)
-      pattern = if(String.ends_with?(pattern, "/*"), do: pattern <> "\\z", else: pattern)
-
       replacements = %{
         "/**/" => "[^.]*/",
         "**" => ".*",
@@ -26,7 +22,10 @@ defmodule Codeowners do
       }
 
       pattern
-      |> String.replace(Map.keys(replacements), fn s -> Map.get(replacements, s) end)
+      |> String.replace_prefix("/", "\\A/")
+      |> String.replace_suffix("/*", "/*\\z")
+      |> String.replace_suffix("/**", "/**\\z")
+      |> String.replace(Map.keys(replacements), &Map.get(replacements, &1))
       |> Regex.compile!()
     end
   end
@@ -53,18 +52,17 @@ defmodule Codeowners do
     %Codeowners{rules: rules}
   end
 
-  def owners_for_path(%Codeowners{} = codeowners, path) do
+  def rule_for_path(%Codeowners{} = codeowners, path) do
     codeowners.rules
     |> Enum.reverse()
     |> Enum.find(
       %Rule{},
       fn rule -> Regex.match?(rule.regex, path) end
     )
-    |> Map.get(:owners)
   end
 
-  def owners_for_module(%Codeowners{} = codeowners, module) do
+  def rule_for_module(%Codeowners{} = codeowners, module) do
     path = module.module_info()[:compile][:source]
-    owners_for_path(codeowners, path)
+    rule_for_path(codeowners, path)
   end
 end
