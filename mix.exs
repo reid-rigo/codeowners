@@ -13,6 +13,7 @@ defmodule Codeowners.MixProject do
       description: description(),
       package: package(),
       deps: deps(),
+      name: "Codeowners",
       source_url: @source_url
     ]
   end
@@ -37,7 +38,7 @@ defmodule Codeowners.MixProject do
 
   defp package do
     [
-      name: "Codeowners",
+      name: "codeowners",
       files: ~w(lib mix.exs README.md CHANGELOG.md LICENSE),
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url}
