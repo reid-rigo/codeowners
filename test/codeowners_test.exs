@@ -1,7 +1,5 @@
 defmodule CodeownersTest do
-  @moduledoc """
-  Test suite for `Codeowners`.
-  """
+  @moduledoc false
 
   use ExUnit.Case
   doctest Codeowners

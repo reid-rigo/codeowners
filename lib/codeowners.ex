@@ -1,14 +1,12 @@
 defmodule Codeowners do
   @moduledoc """
-  Documentation for `Codeowners`.
+  A pure Elixir CODEOWNERS parser.
   """
 
   defstruct path: nil, rules: []
 
   defmodule Rule do
-    @moduledoc """
-    Documentation for `Codeowners.Rule`.
-    """
+    @moduledoc false
 
     defstruct pattern: nil, regex: nil, owners: []
 
@@ -31,7 +29,7 @@ defmodule Codeowners do
   end
 
   @doc """
-  Hello world.
+  Load a Codeowners file from the given path.
   """
   def load(path) do
     File.read!(path)
@@ -39,6 +37,9 @@ defmodule Codeowners do
     |> Map.put(:path, path)
   end
 
+  @doc """
+  Build a Codeowners struct from string.
+  """
   def build(file_content \\ "") do
     rules =
       file_content
@@ -52,6 +53,9 @@ defmodule Codeowners do
     %Codeowners{rules: rules}
   end
 
+  @doc """
+  Given a Codeowners struct and path, return the matching rule, or empty rule.
+  """
   def rule_for_path(%Codeowners{} = codeowners, path) do
     codeowners.rules
     |> Enum.reverse()
@@ -61,6 +65,9 @@ defmodule Codeowners do
     )
   end
 
+  @doc """
+  Given a Codeowners struct and Elixir module, return the matching rule, or empty rule.
+  """
   def rule_for_module(%Codeowners{} = codeowners, module) do
     path = module.module_info()[:compile][:source]
     rule_for_path(codeowners, path)

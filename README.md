@@ -1,11 +1,10 @@
 # Codeowners
 
-**TODO: Add description**
+A pure Elixir CODEOWNERS parser.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `codeowners` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `codeowners` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,6 +14,13 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/codeowners>.
+## Basic usage
+
+```elixir
+codeowners = Codeowners.load(Path.expand("./.github/CODEOWNERS"))
+matching_rule = Codeowners.rule_for_path(codeowners, "lib/my_module.ex")
+```
+
+## License
+
+MIT License - see the [LICENSE](https://github.com/reid-rigo/codeowners/blob/main/LICENSE) file.
