@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.2
+
+Custom inspect to make output more sane
+
 ## 0.1.1
 
 - Improve documentation

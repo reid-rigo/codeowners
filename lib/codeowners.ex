@@ -68,4 +68,12 @@ defmodule Codeowners do
     path = module.module_info()[:compile][:source] |> to_string()
     rule_for_path(codeowners, path)
   end
+
+  defimpl Inspect, for: Codeowners do
+    def inspect(codeowners, opts) do
+      limit = min(opts.limit, 10)
+      opts = Map.put(opts, :limit, limit)
+      Inspect.Any.inspect(codeowners, opts)
+    end
+  end
 end
