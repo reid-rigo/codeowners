@@ -33,7 +33,7 @@ defmodule Codeowners.MixProject do
 
   defp description do
     """
-    A pure Elixir CODEOWNERS parser.
+    A pure Elixir parser for the Github CODEOWNERS specification.
     """
   end
 

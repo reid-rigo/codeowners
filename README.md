@@ -1,6 +1,6 @@
 # Codeowners
 
-A pure Elixir CODEOWNERS parser.
+A pure Elixir parser for the Github CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
 
 ## Installation
 
@@ -17,7 +17,7 @@ end
 ## Basic usage
 
 ```elixir
-codeowners = Codeowners.load(Path.expand("./.github/CODEOWNERS"))
+codeowners = Codeowners.load(".github/CODEOWNERS")
 matching_rule = Codeowners.rule_for_path(codeowners, "lib/my_module.ex")
 ```
 

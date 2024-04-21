@@ -6,8 +6,7 @@ defmodule CodeownersTest do
 
   describe "load" do
     test "gives a %Codeowners{}" do
-      path = Path.expand("./priv/CODEOWNERS")
-      assert %Codeowners{} = Codeowners.load(path)
+      assert %Codeowners{} = Codeowners.load("priv/CODEOWNERS")
     end
   end
 

@@ -1,46 +1,32 @@
 defmodule Codeowners do
   @moduledoc """
-  A pure Elixir CODEOWNERS parser.
+  A pure Elixir parser for the Github CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
   """
 
+  alias Codeowners.Rule
+
+  @type t :: %Codeowners{path: String.t(), rules: Codeowners.Rule.t()}
   defstruct path: nil, rules: []
 
-  defmodule Rule do
-    @moduledoc false
-
-    defstruct pattern: nil, regex: nil, owners: []
-
-    def regex(pattern) do
-      replacements = %{
-        "/**/" => "[^.]*/",
-        "**" => ".*",
-        "*" => "[^/]*",
-        "/" => "\/",
-        "." => "\."
-      }
-
-      pattern
-      |> String.replace_prefix("/", "\\A/")
-      |> String.replace_suffix("/*", "/*\\z")
-      |> String.replace_suffix("/**", "/**\\z")
-      |> String.replace(Map.keys(replacements), &Map.get(replacements, &1))
-      |> Regex.compile!()
-    end
-  end
-
   @doc """
-  Load a Codeowners file from the given path.
+  Loads a CODEOWNERS file from the given path, returning a `Codeowners` struct.
+
+  `load/1` calls `build/1` to process the contained ownership rules.
   """
-  def load(path) do
+  def load(path) when is_binary(path) do
     File.read!(path)
     |> build()
     |> Map.put(:path, path)
   end
 
   @doc """
-  Build a Codeowners struct from string.
+  Builds a `Codeowners` struct from a string containing CODEOWNERS rules.
+
+  Parses each line generating a list of `Codeowners.Rule`.
+
+  For most use cases it makes sense to use `load/1`, which in turn calls `build/1`
   """
-  def build(file_content \\ "") do
+  def build(file_content \\ "") when is_binary(file_content) do
     rules =
       file_content
       |> String.split("\n", trim: true)
@@ -54,9 +40,11 @@ defmodule Codeowners do
   end
 
   @doc """
-  Given a Codeowners struct and path, return the matching rule, or empty rule.
+  Given a `Codeowners` struct and path, return the matching rule or empty rule.
+
+  Searches in reverse to return the last match.
   """
-  def rule_for_path(%Codeowners{} = codeowners, path) do
+  def rule_for_path(%Codeowners{} = codeowners, path) when is_binary(path) do
     codeowners.rules
     |> Enum.reverse()
     |> Enum.find(
@@ -66,10 +54,12 @@ defmodule Codeowners do
   end
 
   @doc """
-  Given a Codeowners struct and Elixir module, return the matching rule, or empty rule.
+  Given a `Codeowners` struct and an Elixir module, return the matching rule or empty rule.
+
+  `Codeowners.rule_for_module` calls `Codeowners.rule_for_path`.
   """
   def rule_for_module(%Codeowners{} = codeowners, module) do
-    path = module.module_info()[:compile][:source]
+    path = module.module_info()[:compile][:source] |> to_string()
     rule_for_path(codeowners, path)
   end
 end
