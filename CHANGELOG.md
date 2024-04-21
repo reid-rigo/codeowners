@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.4
+
+- `root` must be present, so use `File.cwd!`
+- Fix . handling in patterns
+
 # 0.1.3
 
 Complete typespecs
