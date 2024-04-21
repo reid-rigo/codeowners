@@ -2,7 +2,7 @@ defmodule Codeowners.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/reid-rigo/codeowners"
-  @version "0.1.2"
+  @version "0.1.3"
 
   def project do
     [
@@ -26,6 +26,7 @@ defmodule Codeowners.MixProject do
 
   defp deps do
     [
+      {:benchee, "~> 1.3", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.32", only: :dev, runtime: false}
     ]
