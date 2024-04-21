@@ -5,8 +5,8 @@ defmodule Codeowners do
 
   alias Codeowners.Rule
 
-  @type t :: %Codeowners{path: String.t(), rules: Codeowners.Rule.t()}
-  defstruct path: nil, rules: []
+  @type t :: %Codeowners{path: String.t(), root: String.t(), rules: Codeowners.Rule.t()}
+  defstruct path: nil, root: nil, rules: []
 
   @doc """
   Loads a CODEOWNERS file from the given path, returning a `Codeowners` struct.
@@ -23,6 +23,7 @@ defmodule Codeowners do
   Builds a `Codeowners` struct from a string containing CODEOWNERS rules.
 
   Parses each line generating a list of `Codeowners.Rule`.
+  Stores `File.cwd/0` as `:root`.
 
   For most use cases it makes sense to use `load/1`, which in turn calls `build/1`
   """
@@ -36,20 +37,25 @@ defmodule Codeowners do
         %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
       end)
 
-    %Codeowners{rules: rules}
+    {:ok, root} = File.cwd()
+
+    %Codeowners{rules: rules, root: root}
   end
 
   @doc """
   Given a `Codeowners` struct and path, return the matching rule or empty rule.
 
   Searches in reverse to return the last match.
+  Handles full paths by removing the root directory before matching.
   """
   def rule_for_path(%Codeowners{} = codeowners, path) when is_binary(path) do
+    relative_path = String.replace_prefix(path, codeowners.root, "")
+
     codeowners.rules
     |> Enum.reverse()
     |> Enum.find(
       %Rule{},
-      fn rule -> Regex.match?(rule.regex, path) end
+      fn rule -> Regex.match?(rule.regex, relative_path) end
     )
   end
 

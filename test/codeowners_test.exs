@@ -22,6 +22,10 @@ defmodule CodeownersTest do
     test "it ignores comments" do
       assert %Codeowners{} = Codeowners.build("#\n#\n#\n#")
     end
+
+    test "it has root" do
+      assert Codeowners.build().root
+    end
   end
 
   describe "rule_for_path" do
@@ -89,6 +93,14 @@ defmodule CodeownersTest do
 
       assert %Codeowners.Rule{owners: ["@team-3"]} =
                Codeowners.rule_for_path(codeowners, "/docs/getting-started.md")
+    end
+
+    test "it removes root from full paths" do
+      root = "/Users/someone/project"
+      codeowners = Codeowners.build("/README.md @team") |> Map.put(:root, root)
+
+      assert %Codeowners.Rule{owners: ["@team"]} =
+               Codeowners.rule_for_path(codeowners, root <> "/README.md")
     end
   end
 
