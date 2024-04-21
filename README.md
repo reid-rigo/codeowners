@@ -9,7 +9,7 @@ The package can be installed by adding `codeowners` to your list of dependencies
 ```elixir
 def deps do
   [
-    {:codeowners, "~> 0.1.0"}
+    {:codeowners, "~> 0.1.1"}
   ]
 end
 ```

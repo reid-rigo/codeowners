@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1
 
 - Improve documentation
 - Better handling of full paths with `:root` value
