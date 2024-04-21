@@ -9,6 +9,7 @@ defmodule Codeowners.Rule do
   @doc """
   Compile a `Regex` for the given pattern string.
   """
+  @spec regex(String.t()) :: Regex.t()
   def regex(pattern) when is_binary(pattern) do
     replacements = %{
       "/**/" => "[^.]*/",

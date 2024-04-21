@@ -5,7 +5,7 @@ defmodule Codeowners do
 
   alias Codeowners.Rule
 
-  @type t :: %Codeowners{path: String.t(), root: String.t(), rules: Codeowners.Rule.t()}
+  @type t :: %Codeowners{path: String.t() | nil, root: String.t() | nil, rules: list(Rule.t())}
   defstruct path: nil, root: nil, rules: []
 
   @doc """
@@ -13,6 +13,7 @@ defmodule Codeowners do
 
   `load/1` calls `build/1` to process the contained ownership rules.
   """
+  @spec load(String.t()) :: t()
   def load(path) when is_binary(path) do
     File.read!(path)
     |> build()
@@ -27,6 +28,7 @@ defmodule Codeowners do
 
   For most use cases it makes sense to use `load/1`, which in turn calls `build/1`
   """
+  @spec build(String.t()) :: t()
   def build(file_content \\ "") when is_binary(file_content) do
     rules =
       file_content
@@ -48,6 +50,7 @@ defmodule Codeowners do
   Searches in reverse to return the last match.
   Handles full paths by removing the root directory before matching.
   """
+  @spec rule_for_path(t(), String.t()) :: Rule.t()
   def rule_for_path(%Codeowners{} = codeowners, path) when is_binary(path) do
     relative_path = String.replace_prefix(path, codeowners.root, "")
 
@@ -64,6 +67,7 @@ defmodule Codeowners do
 
   `Codeowners.rule_for_module` calls `Codeowners.rule_for_path`.
   """
+  @spec rule_for_module(t(), module()) :: Rule.t()
   def rule_for_module(%Codeowners{} = codeowners, module) do
     path = module.module_info()[:compile][:source] |> to_string()
     rule_for_path(codeowners, path)

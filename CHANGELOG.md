@@ -1,5 +1,9 @@
 # Changelog
 
+# Unreleased
+
+Complete typespecs
+
 # 0.1.2
 
 Custom inspect to make output more sane
