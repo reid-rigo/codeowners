@@ -83,6 +83,16 @@ defmodule CodeownersTest do
                Codeowners.rule_for_path(codeowners, "/docs/setup/dev/getting-started.md")
     end
 
+    test "escapes ." do
+      codeowners = Codeowners.build("file.ex @team")
+
+      assert %Codeowners.Rule{owners: ["@team"]} =
+               Codeowners.rule_for_path(codeowners, "file.ex")
+
+      assert %Codeowners.Rule{owners: []} =
+               Codeowners.rule_for_path(codeowners, "fileaex")
+    end
+
     test "it returns the last match" do
       codeowners =
         Codeowners.build("""

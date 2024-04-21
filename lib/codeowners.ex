@@ -5,7 +5,7 @@ defmodule Codeowners do
 
   alias Codeowners.Rule
 
-  @type t :: %Codeowners{path: String.t() | nil, root: String.t() | nil, rules: list(Rule.t())}
+  @type t :: %Codeowners{path: String.t() | nil, root: String.t(), rules: list(Rule.t())}
   defstruct path: nil, root: nil, rules: []
 
   @doc """
@@ -39,7 +39,7 @@ defmodule Codeowners do
         %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
       end)
 
-    {:ok, root} = File.cwd()
+    root = File.cwd!()
 
     %Codeowners{rules: rules, root: root}
   end
