@@ -17,8 +17,31 @@ end
 ## Basic usage
 
 ```elixir
-codeowners = Codeowners.load(".github/CODEOWNERS")
-matching_rule = Codeowners.rule_for_path(codeowners, "lib/my_module.ex")
+> codeowners = Codeowners.load(".github/CODEOWNERS")
+%Codeowners{
+  path: "/Users/me/project/.github/CODEOWNERS",
+  root: "/Users/me/project",
+  rules: [
+    %Codeowners.Rule{
+      pattern: "*",
+      regex: ~r/[^\/]*/,
+      owners: ["@global-owner1", "@global-owner2"]
+    },
+    %Codeowners.Rule{
+      pattern: "*.js",
+      regex: ~r/[^\/]*\.js/,
+      owners: ["@js-owner"]
+    },
+    ...
+  ]
+}
+
+> matching_rule = Codeowners.rule_for_path(codeowners, "docs/setup.md")
+%Codeowners.Rule{
+  pattern: "docs/*",
+  regex: ~r/docs\/[^\/]*\z/,
+  owners: ["docs@example.com"]
+}
 ```
 
 ## License
