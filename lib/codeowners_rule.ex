@@ -13,16 +13,13 @@ defmodule Codeowners.Rule do
   """
   @spec regex(String.t()) :: t() | nil
   def build(line) when is_binary(line) do
-    rule =
-      String.split(line, "#")
-      |> List.first()
+    rule = line |> String.split("#") |> hd()
 
-    case rule do
-      "" ->
+    case String.split(rule) do
+      [] ->
         nil
 
-      _ ->
-        [pattern | owners] = String.split(rule)
+      [pattern | owners] ->
         %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
     end
   end
