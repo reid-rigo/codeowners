@@ -1,5 +1,9 @@
 # Changelog
 
+# Unreleased
+
+Handle inline comments
+
 # 0.1.4
 
 - `root` must be present, so use `File.cwd!`

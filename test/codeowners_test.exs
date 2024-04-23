@@ -19,8 +19,13 @@ defmodule CodeownersTest do
       assert %Codeowners{} = Codeowners.build("\n\n\n")
     end
 
-    test "it ignores comments" do
+    test "it ignores comment lines" do
       assert %Codeowners{} = Codeowners.build("#\n#\n#\n#")
+    end
+
+    test "it ignores inline comments" do
+      codeowners = Codeowners.build("* @team # comment")
+      assert %Codeowners.Rule{owners: ["@team"]} = Codeowners.rule_for_path(codeowners, "test")
     end
 
     test "it has root" do

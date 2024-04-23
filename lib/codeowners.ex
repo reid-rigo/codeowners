@@ -32,12 +32,9 @@ defmodule Codeowners do
   def build(file_content \\ "") when is_binary(file_content) do
     rules =
       file_content
-      |> String.split("\n", trim: true)
-      |> Enum.reject(fn line -> String.starts_with?(line, "#") end)
-      |> Enum.map(fn line ->
-        [pattern | owners] = String.split(line)
-        %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
-      end)
+      |> String.split(["\n", "\r", "\r\n"], trim: true)
+      |> Enum.map(&Rule.build/1)
+      |> Enum.reject(&is_nil/1)
 
     root = File.cwd!()
 
