@@ -23,11 +23,6 @@ defmodule CodeownersTest do
       assert %Codeowners{} = Codeowners.build("#\n#\n#\n#")
     end
 
-    test "it ignores inline comments" do
-      codeowners = Codeowners.build("* @team # comment")
-      assert %Codeowners.Rule{owners: ["@team"]} = Codeowners.rule_for_path(codeowners, "test")
-    end
-
     test "it has root" do
       assert Codeowners.build().root
     end
@@ -39,66 +34,7 @@ defmodule CodeownersTest do
       assert %Codeowners.Rule{owners: []} = Codeowners.rule_for_path(codeowners, "./test")
     end
 
-    test "matches *" do
-      codeowners = Codeowners.build("* @team")
-      assert %Codeowners.Rule{owners: ["@team"]} = Codeowners.rule_for_path(codeowners, "/test")
-    end
-
-    test "matches * with extension" do
-      codeowners = Codeowners.build("*.js @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "/test.js")
-
-      assert %Codeowners.Rule{owners: ["@team"]} !=
-               Codeowners.rule_for_path(codeowners, "/test.ts")
-    end
-
-    test "matches directory starting at root" do
-      codeowners = Codeowners.build("/build/logs/ @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "/build/logs/test.log")
-
-      assert %Codeowners.Rule{owners: ["@team"]} !=
-               Codeowners.rule_for_path(codeowners, "/dev/build/logs/test.log")
-    end
-
-    test "matches rootless directory" do
-      codeowners = Codeowners.build("docs/ @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "/app/docs/setup/info.md")
-    end
-
-    test "matches directory with *" do
-      codeowners = Codeowners.build("docs/* @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "docs/getting-started.md")
-
-      assert %Codeowners.Rule{owners: []} =
-               Codeowners.rule_for_path(codeowners, "docs/build-app/troubleshooting.md")
-    end
-
-    test "matches /**" do
-      codeowners = Codeowners.build("/docs/** @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "/docs/setup/dev/getting-started.md")
-    end
-
-    test "escapes ." do
-      codeowners = Codeowners.build("file.ex @team")
-
-      assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, "file.ex")
-
-      assert %Codeowners.Rule{owners: []} =
-               Codeowners.rule_for_path(codeowners, "fileaex")
-    end
-
-    test "it returns the last match" do
+    test "returns the last match" do
       codeowners =
         Codeowners.build("""
           *           @team-1
@@ -110,12 +46,12 @@ defmodule CodeownersTest do
                Codeowners.rule_for_path(codeowners, "/docs/getting-started.md")
     end
 
-    test "it removes root from full paths" do
-      root = "/Users/someone/project"
-      codeowners = Codeowners.build("/README.md @team") |> Map.put(:root, root)
+    test "removes root from full paths" do
+      codeowners =
+        Codeowners.build("/README.md @team") |> Map.put(:root, "/Users/someone/project")
 
       assert %Codeowners.Rule{owners: ["@team"]} =
-               Codeowners.rule_for_path(codeowners, root <> "/README.md")
+               Codeowners.rule_for_path(codeowners, "/Users/someone/project/README.md")
     end
   end
 

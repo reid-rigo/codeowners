@@ -11,7 +11,7 @@ defmodule Codeowners.Rule do
   @doc """
   Build a `Codeowners.Rule` for the given CODEOWNERS line.
   """
-  @spec regex(String.t()) :: t() | nil
+  @spec build(String.t()) :: t() | nil
   def build(line) when is_binary(line) do
     rule = line |> String.split("#") |> hd()
 
