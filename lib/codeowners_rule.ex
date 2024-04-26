@@ -5,7 +5,11 @@ defmodule Codeowners.Rule do
 
   alias Codeowners.Rule
 
-  @type t :: %Codeowners.Rule{pattern: String.t(), regex: Regex.t(), owners: list(String.t())}
+  @type t :: %Codeowners.Rule{
+          pattern: String.t() | nil,
+          regex: Regex.t() | nil,
+          owners: list(String.t())
+        }
   defstruct pattern: nil, regex: nil, owners: []
 
   @doc """
