@@ -3,9 +3,7 @@ defmodule Codeowners.Rule do
   Contains types and functions related to individual CODEOWNERS rules.
   """
 
-  alias Codeowners.Rule
-
-  @type t :: %Codeowners.Rule{
+  @type t :: %__MODULE__{
           pattern: String.t() | nil,
           regex: Regex.t() | nil,
           owners: list(String.t())
@@ -13,7 +11,7 @@ defmodule Codeowners.Rule do
   defstruct pattern: nil, regex: nil, owners: []
 
   @doc """
-  Build a `Codeowners.Rule` for the given CODEOWNERS line.
+  Build a `#{inspect(__MODULE__)}` for the given CODEOWNERS line.
   """
   @spec build(String.t()) :: t() | nil
   def build(line) when is_binary(line) do
@@ -24,7 +22,7 @@ defmodule Codeowners.Rule do
         nil
 
       [pattern | owners] ->
-        %Rule{pattern: pattern, regex: Rule.regex(pattern), owners: owners}
+        %__MODULE__{pattern: pattern, regex: regex(pattern), owners: owners}
     end
   end
 

@@ -3,13 +3,13 @@ defmodule Codeowners do
   A pure Elixir parser for the Github CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
   """
 
-  alias Codeowners.Rule
+  alias __MODULE__.Rule
 
-  @type t :: %Codeowners{path: String.t() | nil, root: String.t(), rules: list(Rule.t())}
+  @type t :: %__MODULE__{path: String.t() | nil, root: String.t(), rules: list(Rule.t())}
   defstruct path: nil, root: nil, rules: []
 
   @doc """
-  Loads a CODEOWNERS file from the given path, returning a `Codeowners` struct.
+  Loads a CODEOWNERS file from the given path, returning a `#{inspect(__MODULE__)}` struct.
 
   `load/2` calls `build/2` to process the contained ownership rules.
   """
@@ -21,7 +21,7 @@ defmodule Codeowners do
   end
 
   @doc """
-  Builds a `Codeowners` struct from a string containing CODEOWNERS rules.
+  Builds a `#{inspect(__MODULE__)}` struct from a string containing CODEOWNERS rules.
 
   Parses each line generating a list of `Codeowners.Rule`.
 
@@ -40,17 +40,17 @@ defmodule Codeowners do
       Keyword.get_lazy(opts, :root, &File.cwd!/0)
       |> String.replace_suffix("/", "")
 
-    %Codeowners{rules: rules, root: root, path: opts[:path]}
+    %__MODULE__{rules: rules, root: root, path: opts[:path]}
   end
 
   @doc """
-  Given a `Codeowners` struct and path, return the matching rule or empty rule.
+  Given a `#{inspect(__MODULE__)}` struct and path, return the matching rule or empty rule.
 
   Searches in reverse to return the last match.
   Handles full paths by removing the root directory before matching.
   """
   @spec rule_for_path(t(), String.t()) :: Rule.t()
-  def rule_for_path(%Codeowners{} = codeowners, path) when is_binary(path) do
+  def rule_for_path(%__MODULE__{} = codeowners, path) when is_binary(path) do
     relative_path = String.replace_prefix(path, codeowners.root, "")
 
     codeowners.rules
@@ -62,17 +62,17 @@ defmodule Codeowners do
   end
 
   @doc """
-  Given a `Codeowners` struct and an Elixir module, return the matching rule or empty rule.
+  Given a `#{inspect(__MODULE__)}` struct and an Elixir module, return the matching rule or empty rule.
 
   `rule_for_module/2` calls `rule_for_path/2`.
   """
   @spec rule_for_module(t(), module()) :: Rule.t()
-  def rule_for_module(%Codeowners{} = codeowners, module) do
+  def rule_for_module(%__MODULE__{} = codeowners, module) do
     path = module.module_info()[:compile][:source] |> to_string()
     rule_for_path(codeowners, path)
   end
 
-  defimpl Inspect, for: Codeowners do
+  defimpl Inspect, for: __MODULE__ do
     def inspect(codeowners, opts) do
       limit = min(opts.limit, 10)
       opts = Map.put(opts, :limit, limit)
