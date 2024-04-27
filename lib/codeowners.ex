@@ -11,34 +11,36 @@ defmodule Codeowners do
   @doc """
   Loads a CODEOWNERS file from the given path, returning a `Codeowners` struct.
 
-  `load/1` calls `build/1` to process the contained ownership rules.
+  `load/2` calls `build/2` to process the contained ownership rules.
   """
-  @spec load(String.t()) :: t()
-  def load(path) when is_binary(path) do
-    File.read!(path)
-    |> build()
-    |> Map.put(:path, path)
+  @spec load(String.t(), root: String.t()) :: t()
+  def load(path, opts \\ []) when is_binary(path) and is_list(opts) do
+    opts = Keyword.merge(opts, path: path)
+    file_content = File.read!(path)
+    build(file_content, opts)
   end
 
   @doc """
   Builds a `Codeowners` struct from a string containing CODEOWNERS rules.
 
   Parses each line generating a list of `Codeowners.Rule`.
-  Stores `File.cwd/0` as `:root`.
 
-  For most use cases it makes sense to use `load/1`, which in turn calls `build/1`
+  For most use cases it makes sense to use `load/2`, which in turn calls `build/2`
   """
-  @spec build(String.t()) :: t()
-  def build(file_content \\ "") when is_binary(file_content) do
+  @spec build(String.t(), root: String.t(), path: String.t()) :: t()
+  def build(file_content \\ "", opts \\ [])
+      when is_binary(file_content) and is_list(opts) do
     rules =
       file_content
       |> String.split(["\n", "\r", "\r\n"], trim: true)
       |> Enum.map(&Rule.build/1)
       |> Enum.reject(&is_nil/1)
 
-    root = File.cwd!()
+    root =
+      Keyword.get_lazy(opts, :root, &File.cwd!/0)
+      |> String.replace_suffix("/", "")
 
-    %Codeowners{rules: rules, root: root}
+    %Codeowners{rules: rules, root: root, path: opts[:path]}
   end
 
   @doc """
@@ -62,7 +64,7 @@ defmodule Codeowners do
   @doc """
   Given a `Codeowners` struct and an Elixir module, return the matching rule or empty rule.
 
-  `Codeowners.rule_for_module` calls `Codeowners.rule_for_path`.
+  `rule_for_module/2` calls `rule_for_path/2`.
   """
   @spec rule_for_module(t(), module()) :: Rule.t()
   def rule_for_module(%Codeowners{} = codeowners, module) do

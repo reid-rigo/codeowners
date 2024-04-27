@@ -1,5 +1,9 @@
 # Changelog
 
+# Unreleased
+
+Allow specifying root when calling load or build as alternative to `File.cwd!`
+
 # 0.1.5
 
 Handle inline comments

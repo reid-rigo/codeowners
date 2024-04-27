@@ -8,6 +8,10 @@ defmodule CodeownersTest do
     test "gives a %Codeowners{}" do
       assert %Codeowners{} = Codeowners.load("priv/CODEOWNERS")
     end
+
+    test "root argument" do
+      assert "/opt/my-project" = Codeowners.load("priv/CODEOWNERS", root: "/opt/my-project").root
+    end
   end
 
   describe "build" do
@@ -15,16 +19,24 @@ defmodule CodeownersTest do
       assert %Codeowners{} = Codeowners.build()
     end
 
-    test "it ignores blank lines" do
+    test "ignores blank lines" do
       assert %Codeowners{} = Codeowners.build("\n\n\n")
     end
 
-    test "it ignores comment lines" do
+    test "ignores comment lines" do
       assert %Codeowners{} = Codeowners.build("#\n#\n#\n#")
     end
 
-    test "it has root" do
+    test "default root" do
       assert Codeowners.build().root
+    end
+
+    test "root argument" do
+      assert "/opt/my-project" = Codeowners.build("", root: "/opt/my-project").root
+    end
+
+    test "trims trailing / from root argument" do
+      assert "/opt/my-project" = Codeowners.build("", root: "/opt/my-project/").root
     end
   end
 
