@@ -1,6 +1,15 @@
 defmodule Codeowners do
   @moduledoc """
   A pure Elixir parser for the Github CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
+
+  ```elixir
+  > Codeowners.load(".github/CODEOWNERS") |> Codeowners.rule_for_path("docs/setup.md")
+  %Codeowners.Rule{
+    pattern: "docs/*",
+    regex: ~r/docs\/[^\/]*\z/,
+    owners: ["docs@example.com"]
+  }
+  ```
   """
 
   alias __MODULE__.Rule
