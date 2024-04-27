@@ -1,6 +1,6 @@
 # Changelog
 
-# Unreleased
+# 0.1.6
 
 Allow specifying root when calling load or build as alternative to `File.cwd!`
 
