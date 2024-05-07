@@ -1,10 +1,26 @@
 defmodule Mix.Tasks.Codeowners do
-  @moduledoc ""
-  @shortdoc "TODO"
+  @moduledoc """
+  List owners for files based on CODEOWNERS.
+
+      mix codeowners lib/
+  """
+  @shortdoc "List owners for files based on CODEOWNERS"
 
   use Mix.Task
 
   @impl Mix.Task
+  def run([]) do
+    warning = IO.ANSI.format([:red, "No files or directories provided\n"])
+    IO.puts(warning)
+
+    usage = [
+      "Example:\n\t",
+      IO.ANSI.format([:bright, "mix codeowners lib/"])
+    ]
+
+    IO.puts(Enum.join(usage))
+  end
+
   def run(args) do
     codeowners = Codeowners.load(codeowners_path())
     IO.puts(IO.ANSI.format([:green, "Using " <> codeowners.path]))
@@ -42,20 +58,13 @@ defmodule Mix.Tasks.Codeowners do
     end)
   end
 
+  defp relative_paths_from_args(["."]), do: relative_paths_from_args(["*"])
+
   # convert args to a list of relative paths to be checked
   defp relative_paths_from_args(args) do
-    args =
-      case args do
-        [] -> ["**"]
-        ["."] -> ["**"]
-        _ -> args
-      end
-
     Enum.flat_map(args, fn arg ->
-      pattern = if File.dir?(arg), do: arg <> "/**", else: arg
-      Path.wildcard(pattern)
+      Path.wildcard(arg)
     end)
-    |> Enum.reject(&File.dir?/1)
     |> Enum.sort()
   end
 
