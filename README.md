@@ -1,6 +1,6 @@
 # Codeowners
 
-A pure Elixir parser for the Github CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
+A pure Elixir parser for the GitHub CODEOWNERS [specification](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
 
 ## Installation
 
@@ -42,6 +42,14 @@ end
   regex: ~r/docs\/[^\/]*\z/,
   owners: ["docs@example.com"]
 }
+```
+
+## Mix task
+
+```sh
+~/my_project/:$ mix codeowners README.md
+Using .github/CODEOWNERS
+README.md    @my-team
 ```
 
 ## License
