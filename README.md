@@ -44,6 +44,14 @@ end
 }
 ```
 
+## Mix task
+
+```sh
+~/my_project/:$ mix codeowners README.md
+Using .github/CODEOWNERS
+README.md    @my-team
+```
+
 ## License
 
 MIT License - see the [LICENSE](https://github.com/reid-rigo/codeowners/blob/main/LICENSE) file.
