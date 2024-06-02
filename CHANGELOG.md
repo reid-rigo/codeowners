@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+Update ex_doc
+
 ## 0.2.0
 
 Mix task to view owners for project files
