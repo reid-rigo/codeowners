@@ -59,6 +59,20 @@ defmodule CodeownersRuleTest do
       assert Regex.match?(regex, "/docs/setup/dev/getting-started.md")
     end
 
+    test "matches /**/dir" do
+      regex = Rule.regex("/**/docs")
+
+      assert Regex.match?(regex, "/app/docs/setup/info.md")
+      assert Regex.match?(regex, "/src/app/docs/setup/info.md")
+    end
+
+    test "matches /**/*word*" do
+      regex = Rule.regex("/**/*doc*")
+
+      assert Regex.match?(regex, "/app/docs/setup/info.md")
+      assert Regex.match?(regex, "/src/app/docs/setup/info.md")
+    end
+
     test "escapes ." do
       regex = Rule.regex("file.ex")
 
