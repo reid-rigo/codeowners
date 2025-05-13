@@ -27,9 +27,9 @@ defmodule Codeowners.MixProject do
 
   defp deps do
     [
-      {:benchee, "~> 1.3", only: :dev},
+      {:benchee, "~> 1.4", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.38", only: :dev, runtime: false}
     ]
   end
 
