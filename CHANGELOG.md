@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+Add `line_number` to rules
+
 ## 0.2.1
 
 Update ex_doc

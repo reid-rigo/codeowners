@@ -9,7 +9,7 @@ The package can be installed by adding `codeowners` to your list of dependencies
 ```elixir
 def deps do
   [
-    {:codeowners, "~> 0.2.1"}
+    {:codeowners, "~> 0.2.2"}
   ]
 end
 ```
@@ -25,12 +25,14 @@ end
     %Codeowners.Rule{
       pattern: "*",
       regex: ~r/[^\/]*/,
-      owners: ["@global-owner1", "@global-owner2"]
+      owners: ["@global-owner1", "@global-owner2"],
+      line_number: 1
     },
     %Codeowners.Rule{
       pattern: "*.js",
       regex: ~r/[^\/]*\.js/,
-      owners: ["@js-owner"]
+      owners: ["@js-owner"],
+      line_number: 2
     },
     ...
   ]
