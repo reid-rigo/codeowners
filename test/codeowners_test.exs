@@ -12,6 +12,12 @@ defmodule CodeownersTest do
     test "root argument" do
       assert "/opt/my-project" = Codeowners.load("priv/CODEOWNERS", root: "/opt/my-project").root
     end
+
+    test "line number" do
+      codeowners = Codeowners.load("priv/CODEOWNERS")
+      rule = codeowners.rules |> Enum.find(fn r -> r.pattern == "*.txt" end)
+      assert 27 = rule.line_number
+    end
   end
 
   describe "build" do

@@ -41,8 +41,9 @@ defmodule Codeowners do
       when is_binary(file_content) and is_list(opts) do
     rules =
       file_content
-      |> String.split(["\n", "\r", "\r\n"], trim: true)
-      |> Enum.map(&Rule.build/1)
+      |> String.split(["\n", "\r", "\r\n"])
+      |> Enum.with_index()
+      |> Enum.map(fn {line, line_number} -> Rule.build(line, line_number + 1) end)
       |> Enum.reject(&is_nil/1)
 
     root =

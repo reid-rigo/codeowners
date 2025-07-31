@@ -8,7 +8,7 @@ defmodule CodeownersRuleTest do
 
   describe "build" do
     test "it gives a pattern, regex, and owner list" do
-      rule = Rule.build("* @team")
+      rule = Rule.build("* @team", 1)
 
       assert "*" = rule.pattern
       assert %Regex{} = rule.regex
@@ -16,7 +16,7 @@ defmodule CodeownersRuleTest do
     end
 
     test "it ignores inline comments" do
-      assert %Rule{owners: ["@team"]} = Rule.build("* @team # comment")
+      assert %Rule{owners: ["@team"]} = Rule.build("* @team # comment", 1)
     end
   end
 

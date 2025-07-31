@@ -6,15 +6,16 @@ defmodule Codeowners.Rule do
   @type t :: %__MODULE__{
           pattern: String.t() | nil,
           regex: Regex.t() | nil,
-          owners: list(String.t())
+          owners: list(String.t()),
+          line_number: integer() | nil
         }
-  defstruct pattern: nil, regex: nil, owners: []
+  defstruct pattern: nil, regex: nil, owners: [], line_number: nil
 
   @doc """
   Build a `#{inspect(__MODULE__)}` for the given CODEOWNERS line.
   """
-  @spec build(String.t()) :: t() | nil
-  def build(line) when is_binary(line) do
+  @spec build(String.t(), integer()) :: t() | nil
+  def build(line, line_number) when is_binary(line) do
     rule = line |> String.split("#") |> hd()
 
     case String.split(rule) do
@@ -22,7 +23,12 @@ defmodule Codeowners.Rule do
         nil
 
       [pattern | owners] ->
-        %__MODULE__{pattern: pattern, regex: regex(pattern), owners: owners}
+        %__MODULE__{
+          pattern: pattern,
+          regex: regex(pattern),
+          owners: owners,
+          line_number: line_number
+        }
     end
   end
 
