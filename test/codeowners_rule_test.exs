@@ -64,6 +64,7 @@ defmodule CodeownersRuleTest do
 
       assert Regex.match?(regex, "/app/docs/setup/info.md")
       assert Regex.match?(regex, "/src/app/docs/setup/info.md")
+      assert Regex.match?(regex, "/docs/setup/info.md")
     end
 
     test "matches /**/*word*" do
